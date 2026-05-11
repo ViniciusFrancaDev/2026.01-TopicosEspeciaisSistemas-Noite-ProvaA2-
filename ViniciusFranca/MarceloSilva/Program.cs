@@ -1,6 +1,7 @@
 using MarceloSilva.Data;
 using MarceloSilva.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +86,27 @@ app.MapPut("/api/livro/devolver/{nome}", (string nome, Livro livroAtualizado, [F
     ctx.SaveChanges();
 
     return Results.Ok(livro);
+});
+
+app.MapGet("/api/livro/disponiveis", ([FromServices] AppDataContext ctx) =>
+{
+    var resultado = ctx.Livros.ToList();
+    
+    if (resultado == null)
+    {
+        return Results.NotFound("Nenhum livro encontrado!");
+    }
+    
+    List<Livro> livrosDisponiveis = new List<Livro>();
+    for(int i = 0; i < resultado.Count; i++)
+    {
+        if(resultado[i].Emprestado == false)
+        {
+            livrosDisponiveis.Add(resultado[i]);
+        }
+    }
+
+    return Results.Ok(livrosDisponiveis.ToList());
 });
 
 app.Run();
