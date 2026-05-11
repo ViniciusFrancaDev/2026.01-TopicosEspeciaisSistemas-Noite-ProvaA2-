@@ -8,8 +8,15 @@ builder.Services.AddDbContext<AppDataContext>();
 
 var app = builder.Build();
 
-app.MapGet("/api/livros", ([FromServices] AppDataContext ctx) =>
+app.MapGet("/api/livro/listar", ([FromServices] AppDataContext ctx) =>
 {
+    var resultado = ctx.Livros.FirstOrDefault();
+
+    if (resultado == null)
+    {
+        return Results.NotFound("Nenhum livro encontrado!");
+    }
+
     return Results.Ok(ctx.Livros.ToList());
 });
 
