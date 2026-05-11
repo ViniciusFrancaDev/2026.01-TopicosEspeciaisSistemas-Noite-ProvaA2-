@@ -67,4 +67,24 @@ app.MapPut("/api/livro/emprestar/{nome}", (string nome, Livro livroAtualizado, [
     return Results.Ok(livro);
 });
 
+app.MapPut("/api/livro/devolver/{nome}", (string nome, Livro livroAtualizado, [FromServices] AppDataContext ctx) =>
+{
+    var livro = ctx.Livros.FirstOrDefault(s => s.Nome == nome);
+
+    if (livro == null)
+    {
+        return Results.NotFound("Livro não encontrado!");
+    }
+
+    if (livro.Emprestado == false)
+    {
+        return Results.Conflict("Livro não foi emprestado anteriormente!");
+    }
+
+    livro.Emprestado = livroAtualizado.Emprestado;
+    ctx.SaveChanges();
+
+    return Results.Ok(livro);
+});
+
 app.Run();
