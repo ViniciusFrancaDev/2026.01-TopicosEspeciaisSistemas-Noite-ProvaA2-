@@ -109,4 +109,25 @@ app.MapGet("/api/livro/disponiveis", ([FromServices] AppDataContext ctx) =>
     return Results.Ok(livrosDisponiveis.ToList());
 });
 
+app.MapGet("/api/livro/emprestados", ([FromServices] AppDataContext ctx) =>
+{
+    var resultado = ctx.Livros.ToList();
+    
+    if (resultado == null)
+    {
+        return Results.NotFound("Nenhum livro encontrado!");
+    }
+    
+    List<Livro> livrosDisponiveis = new List<Livro>();
+    for(int i = 0; i < resultado.Count; i++)
+    {
+        if(resultado[i].Emprestado == true)
+        {
+            livrosDisponiveis.Add(resultado[i]);
+        }
+    }
+
+    return Results.Ok(livrosDisponiveis.ToList());
+});
+
 app.Run();
