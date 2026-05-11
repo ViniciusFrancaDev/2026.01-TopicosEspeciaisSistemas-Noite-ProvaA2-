@@ -20,6 +20,18 @@ app.MapGet("/api/livro/listar", ([FromServices] AppDataContext ctx) =>
     return Results.Ok(ctx.Livros.ToList());
 });
 
+app.MapGet("/api/livro/buscar/{nome}", (string nome, [FromServices] AppDataContext ctx) =>
+{
+    var livro = ctx.Livros.FirstOrDefault(s => s.Nome == nome);
+
+    if (livro == null)
+    {
+        return Results.NotFound("Livro não encontrado!");
+    }
+
+    return Results.Ok(livro);
+});
+
 app.MapPost("/api/livro/cadastrar", ([FromBody] Livro livro, [FromServices] AppDataContext ctx) =>
 {
     var resultado = ctx.Livros.FirstOrDefault(l => l.Nome == livro.Nome);
