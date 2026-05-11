@@ -106,6 +106,11 @@ app.MapGet("/api/livro/disponiveis", ([FromServices] AppDataContext ctx) =>
         }
     }
 
+    if (livrosDisponiveis.Count() == 0)
+    {
+        return Results.NotFound("Nenhum livro disponivel encontrado!");
+    }
+
     return Results.Ok(livrosDisponiveis.ToList());
 });
 
@@ -118,16 +123,21 @@ app.MapGet("/api/livro/emprestados", ([FromServices] AppDataContext ctx) =>
         return Results.NotFound("Nenhum livro encontrado!");
     }
     
-    List<Livro> livrosDisponiveis = new List<Livro>();
+    List<Livro> livrosEmprestados = new List<Livro>();
     for(int i = 0; i < resultado.Count; i++)
     {
         if(resultado[i].Emprestado == true)
         {
-            livrosDisponiveis.Add(resultado[i]);
+            livrosEmprestados.Add(resultado[i]);
         }
     }
 
-    return Results.Ok(livrosDisponiveis.ToList());
+    if (livrosEmprestados.Count() == 0)
+    {
+        return Results.NotFound("Nenhum livro emprestado encontrado!");
+    }
+
+    return Results.Ok(livrosEmprestados.ToList());
 });
 
 app.Run();
