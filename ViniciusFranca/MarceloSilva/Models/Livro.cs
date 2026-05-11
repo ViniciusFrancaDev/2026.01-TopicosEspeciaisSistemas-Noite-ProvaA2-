@@ -8,4 +8,5 @@ public class Livro
     public string? Nome { get; set; }
     public string? Autor { get; set; }
     public DateTime CriadoEm { get; set; } = DateTime.Now;
+    public Boolean Emprestado { get; set; } = false;
 }

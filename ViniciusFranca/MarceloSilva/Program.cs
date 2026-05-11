@@ -22,7 +22,7 @@ app.MapGet("/api/livro/listar", ([FromServices] AppDataContext ctx) =>
 
 app.MapGet("/api/livro/buscar/{nome}", (string nome, [FromServices] AppDataContext ctx) =>
 {
-    var livro = ctx.Livros.FirstOrDefault(s => s.Nome == nome);
+    var livro = ctx.Livros.FirstOrDefault(l => l.Nome == nome);
 
     if (livro == null)
     {
@@ -45,6 +45,26 @@ app.MapPost("/api/livro/cadastrar", ([FromBody] Livro livro, [FromServices] AppD
     ctx.SaveChanges();
 
     return Results.Created("", livro);
+});
+
+app.MapPut("/api/livro/emprestar/{nome}", (string nome, Livro livroAtualizado, [FromServices] AppDataContext ctx) =>
+{
+    var livro = ctx.Livros.FirstOrDefault(s => s.Nome == nome);
+
+    if (livro == null)
+    {
+        return Results.NotFound("Livro não encontrado!");
+    }
+
+    if (livro.Emprestado == true)
+    {
+        return Results.Conflict("Livro emprestado anteriormente!");
+    }
+
+    livro.Emprestado = livroAtualizado.Emprestado;
+    ctx.SaveChanges();
+
+    return Results.Ok(livro);
 });
 
 app.Run();
