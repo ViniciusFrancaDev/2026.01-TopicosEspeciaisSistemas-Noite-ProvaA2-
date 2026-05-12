@@ -1,6 +1,39 @@
 @MarceloSilva_HostAddress = http://localhost:5082
 
-GET {{MarceloSilva_HostAddress}}/weatherforecast/
-Accept: application/json
+### Cadastrar livros
+POST http://localhost:5082/api/livro/cadastrar
+Content-Type: application/json
 
-###
+{
+  "nome": "Harry Potter",
+  "autor": "JK Rowling",
+  "criadoEm": "2026-10-20T19:00:00"
+}
+
+### Listar livros
+GET http://localhost:5082/api/livro/listar
+
+### Buscar livros por nome
+GET http://localhost:5082/api/livro/buscar/Harry Potter
+
+### Emprestar livro
+PUT http://localhost:5082/api/livro/emprestar/Harry Potter
+Content-Type: application/json
+
+{
+    "emprestado": true
+}
+
+### Devolver livro
+PUT http://localhost:5082/api/livro/devolver/Harry Potter
+Content-Type: application/json
+
+{
+    "emprestado": false
+}
+
+### Listar livros disponiveis
+GET http://localhost:5082/api/livro/disponiveis
+
+### Listar livros emprestados
+GET http://localhost:5082/api/livro/emprestados
